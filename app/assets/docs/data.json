@@ -1,0 +1,19 @@
+{
+    "quotes":[
+        {
+            "id":1,
+            "author":"Dr. A.P.J Abdul Kalam",
+            "quote":"You have to dream before your dreams can come true"
+        },
+        {
+            "id":2,
+            "author":"Mahatma Gandhi",
+            "quote":"The weak can never forgive. Forgiveness is the attribute of the strong"
+        },
+        {
+            "id":3,
+            "author":"Abraham Lincoln",
+            "quote":"When you reach the end of your rope, tie a knot and hang on"
+        }
+    ]
+}
