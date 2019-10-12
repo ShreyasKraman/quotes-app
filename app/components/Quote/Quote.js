@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
 
-import {StyleSheet, View, Dimensions, TextInput, Text, TouchableOpacity} from 'react-native';
+import {View, TextInput, Text, TouchableOpacity} from 'react-native';
+
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import {connect} from 'react-redux';
 
 import {addQuote, updateQuote} from '../../store/actions/actions';
+import { Actions } from 'react-native-router-flux';
+
+import {styles} from './QuoteStyle';
 
 class NewQuote extends Component{
 
     state = {
-        quote:{},
-        edit:false,
+        author:(this.props.edit)?this.props.quote.author : '',
+        text:(this.props.edit)?this.props.quote.text : '',
     }
 
     generateID = () => {
@@ -26,26 +31,65 @@ class NewQuote extends Component{
 
     addQuote = () => {
        if(this.state.edit){
-           let quote = this.state.quote;
+           let quote = this.props.quote;
+           quote['author'] = this.state.author;
+           quote['text'] = this.state.text;
+           this.props.updateQuote(quote);
+       }else{
+           let id = this.generateID();
+           let quote = {
+               "id":id,
+               "author":this.state.author,
+               "text":this.state.text,
+           }
 
-           quote[]
+           this.props.addQuote(quote);
        }
+
+       Actions.pop();
     }
 
-    render(props){
-
-        if(props.edit){
-            this.setState({
-                            quote:props.quote,
-                            edit:props.edit,
-                        });
-        }
-
+    render(){
 
         return(
+            <View>
+                <View>
+                    <TextInput
+                        onChangeText={(text)=>this.setState({author:text})}
+                        placeholder={"Author"}
+                        autoFocus={true}
+                        style={[styles.title]}
+                        value={this.state.author}
+                    />
+                    <TextInput
+                        multiline={true}
+                        onChangeText={(text) => this.setState({text: text})}
+                        placeholder={"Quote"}
+                        style={[styles.quote]}
+                        value={this.state.quote}
+                    />
+                </View>
+                <TouchableOpacity 
+                    style={[styles.saveBtn]}
+                    disabled={(this.state.author.length>0 && this.state.text.length>0)?true:false}
+                    onPress={this.addQuote}>
+                        
+                        <Text 
+                            style={[
+                                    styles.buttonText,
+                                    {
+                                        color: (this.state.author.length > 0 && this.state.quote.length > 0) ? "#FFF" : "rgba(255,255,255,.5)"
+                                    }]}> 
+                                    Save 
+                        </Text>
 
+                </TouchableOpacity>
+                <KeyboardSpacer />
+            </View> 
         );
 
     }
 
 }
+
+export default connect(null,(addQuote,updateQuote))(NewQuote);
